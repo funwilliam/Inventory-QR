@@ -1,12 +1,14 @@
 export async function shareOrDownloadFile(file: File): Promise<"shared" | "downloaded" | "blocked"> {
+  const filename = file.name.normalize("NFC");
+  const normalizedFile = file.name === filename ? file : new File([file], filename, { type: file.type });
   // Prefer iOS share sheet (Mail / Files / AirDrop).
   const navAny = navigator as any;
-  if (navAny?.canShare && navAny.canShare({ files: [file] }) && navAny.share) {
+  if (navAny?.canShare && navAny.canShare({ files: [normalizedFile] }) && navAny.share) {
     try {
       await navAny.share({
-        title: file.name,
+        title: filename,
         text: "盤點結果 CSV",
-        files: [file],
+        files: [normalizedFile],
       });
       return "shared";
     } catch {
@@ -16,10 +18,10 @@ export async function shareOrDownloadFile(file: File): Promise<"shared" | "downl
 
   // Fallback: download (iOS Safari may show a preview first; user can Save to Files).
   try {
-    const url = URL.createObjectURL(file);
+    const url = URL.createObjectURL(normalizedFile);
     const a = document.createElement("a");
     a.href = url;
-    a.download = file.name;
+    a.download = filename;
     a.rel = "noopener";
     document.body.appendChild(a);
     a.click();

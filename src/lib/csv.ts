@@ -15,11 +15,13 @@ export function toCsvRows(rows: ScanRow[]): string {
     const iso = new Date(r.ts).toISOString();
     lines.push([escapeCsvCell(iso), escapeCsvCell(r.code)].join(","));
   }
-  return lines.join("\n") + "\n";
+  // Use CRLF for better Excel compatibility on Windows.
+  return lines.join("\r\n") + "\r\n";
 }
 
 export function makeCsvFile(rows: ScanRow[], filename: string): File {
-  const csv = toCsvRows(rows);
-  const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
-  return new File([blob], filename, { type: "text/csv" });
+  const normalizedFilename = filename.normalize("NFC");
+  // Add UTF-8 BOM so Excel can reliably detect UTF-8 and show CJK correctly.
+  const csv = "\uFEFF" + toCsvRows(rows);
+  return new File([csv], normalizedFilename, { type: "text/csv;charset=utf-8" });
 }
