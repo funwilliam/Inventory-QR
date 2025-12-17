@@ -40,7 +40,7 @@ export async function startQrScanner(
   return {
     stop: () => {
       try { controls?.stop(); } catch {}
-      try { reader.reset(); } catch {}
+      try { (reader as any).reset?.(); } catch {}
     },
   };
 }

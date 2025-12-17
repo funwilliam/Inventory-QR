@@ -5,7 +5,7 @@ import { beep } from "../lib/beep";
 
 type Props = {
   rows: ScanRow[];
-  setRows: (rows: ScanRow[]) => void;
+  setRows: React.Dispatch<React.SetStateAction<ScanRow[]>>;
   settings: AppSettings;
   sessionName: string;
 };
@@ -18,8 +18,11 @@ export default function ScannerView({ rows, setRows, settings, sessionName }: Pr
 
   const [isRunning, setIsRunning] = useState(false);
   const [flash, setFlash] = useState<Flash | null>(null);
-  const [lastText, setLastText] = useState<string>("");
-  const [lastTs, setLastTs] = useState<number>(0);
+
+  const settingsRef = useRef<AppSettings>(settings);
+  const seenRef = useRef<Set<string>>(new Set());
+  const lastTextRef = useRef<string>("");
+  const lastTsRef = useRef<number>(0);
 
   const seen = useMemo(() => {
     // For quick duplicate check.
@@ -27,6 +30,14 @@ export default function ScannerView({ rows, setRows, settings, sessionName }: Pr
     for (const r of rows) m.add(r.code);
     return m;
   }, [rows]);
+
+  useEffect(() => {
+    settingsRef.current = settings;
+  }, [settings]);
+
+  useEffect(() => {
+    seenRef.current = seen;
+  }, [seen]);
 
   const total = rows.length;
 
@@ -43,21 +54,24 @@ export default function ScannerView({ rows, setRows, settings, sessionName }: Pr
           const cleaned = text.trim();
           if (!cleaned) return;
 
+          const s = settingsRef.current;
+
           // Cooldown: ignore rapid repeats of the same code (helps jitter when camera stays on the same QR)
-          if (cleaned === lastText && now - lastTs < settings.ignoreSameCodeCooldownMs) return;
+          if (cleaned === lastTextRef.current && now - lastTsRef.current < s.ignoreSameCodeCooldownMs) return;
 
-          setLastText(cleaned);
-          setLastTs(now);
+          lastTextRef.current = cleaned;
+          lastTsRef.current = now;
 
-          const isDup = seen.has(cleaned);
+          const isDup = seenRef.current.has(cleaned);
 
-          if (!isDup || !settings.uniqueOnly) {
-            setRows([...rows, { code: cleaned, ts: now }]);
+          if (!isDup || !s.uniqueOnly) {
+            setRows((prev) => [...prev, { code: cleaned, ts: now }]);
+            seenRef.current.add(cleaned);
           }
 
           setFlash({ kind: isDup ? "dup" : "ok", text: cleaned, ts: now });
 
-          if (settings.beep) {
+          if (s.beep) {
             // Fire-and-forget
             beep(isDup ? "dup" : "ok").catch(() => {});
           }
@@ -146,7 +160,7 @@ export default function ScannerView({ rows, setRows, settings, sessionName }: Pr
           onClick={() => {
             if (rows.length === 0) return;
             // Undo last recorded row
-            setRows(rows.slice(0, -1));
+            setRows((prev) => prev.slice(0, -1));
             setFlash({ kind: "dup", text: "已復原上一筆", ts: Date.now() });
           }}
           className="rounded-2xl bg-slate-900 border border-slate-700 px-4 py-4 text-base font-semibold active:scale-[0.99]"

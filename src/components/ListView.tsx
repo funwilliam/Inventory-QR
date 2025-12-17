@@ -3,7 +3,7 @@ import type { ScanRow } from "../types";
 
 type Props = {
   rows: ScanRow[];
-  setRows: (rows: ScanRow[]) => void;
+  setRows: React.Dispatch<React.SetStateAction<ScanRow[]>>;
 };
 
 function fmt(ts: number) {
