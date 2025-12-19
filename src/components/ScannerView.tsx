@@ -15,9 +15,12 @@ type Flash = { kind: "ok" | "dup"; text: string; ts: number };
 export default function ScannerView({ rows, setRows, settings, sessionName }: Props) {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const handleRef = useRef<{ stop: () => void } | null>(null);
+  const videoTrackRef = useRef<MediaStreamTrack | null>(null);
 
   const [isRunning, setIsRunning] = useState(false);
   const [flash, setFlash] = useState<Flash | null>(null);
+  const [torchSupported, setTorchSupported] = useState(false);
+  const [torchOn, setTorchOn] = useState(false);
 
   const settingsRef = useRef<AppSettings>(settings);
   const seenRef = useRef<Set<string>>(new Set());
@@ -40,6 +43,35 @@ export default function ScannerView({ rows, setRows, settings, sessionName }: Pr
   }, [seen]);
 
   const total = rows.length;
+
+  function refreshTorchSupport() {
+    const stream = (videoRef.current?.srcObject ?? null) as MediaStream | null;
+    const track = stream?.getVideoTracks?.()?.[0] ?? null;
+    videoTrackRef.current = track;
+
+    if (!track) {
+      setTorchSupported(false);
+      setTorchOn(false);
+      return;
+    }
+
+    const caps = (track.getCapabilities?.() ?? {}) as any;
+    const supported = !!caps?.torch;
+    setTorchSupported(supported);
+    if (!supported) setTorchOn(false);
+  }
+
+  async function setTorch(nextOn: boolean) {
+    const track = videoTrackRef.current;
+    if (!track) return;
+
+    try {
+      await track.applyConstraints({ advanced: [{ torch: nextOn }] } as any);
+      setTorchOn(nextOn);
+    } catch {
+      setTorchOn(false);
+    }
+  }
 
   async function start() {
     if (!videoRef.current) return;
@@ -77,6 +109,13 @@ export default function ScannerView({ rows, setRows, settings, sessionName }: Pr
           }
         },
       });
+
+      // `decodeFromConstraints` attaches the MediaStream to the video element.
+      refreshTorchSupport();
+      // Some browsers attach `srcObject` async; re-check shortly.
+      window.setTimeout(() => {
+        if (handleRef.current) refreshTorchSupport();
+      }, 150);
     } catch (e) {
       setFlash({ kind: "dup", text: "相機啟動失敗：請確認 HTTPS / 相機權限", ts: Date.now() });
       stop();
@@ -85,10 +124,15 @@ export default function ScannerView({ rows, setRows, settings, sessionName }: Pr
 
   function stop() {
     try {
+      // Best-effort: turn off torch before releasing the track.
+      if (torchOn) setTorch(false).catch(() => {});
       handleRef.current?.stop();
     } finally {
       handleRef.current = null;
       setIsRunning(false);
+      videoTrackRef.current = null;
+      setTorchSupported(false);
+      setTorchOn(false);
     }
   }
 
@@ -125,6 +169,22 @@ export default function ScannerView({ rows, setRows, settings, sessionName }: Pr
           <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
             <div className="w-64 h-64 rounded-2xl border-2 border-white/60 shadow-[0_0_0_9999px_rgba(0,0,0,0.35)]" />
           </div>
+
+          {isRunning && torchSupported ? (
+            <button
+              type="button"
+              onClick={() => setTorch(!torchOn)}
+              className={[
+                "absolute right-3 bottom-3 rounded-xl px-3 py-2 text-sm font-semibold",
+                "border border-white/15 backdrop-blur active:scale-[0.99]",
+                torchOn ? "bg-amber-400/90 text-slate-950" : "bg-slate-900/70 text-white",
+              ].join(" ")}
+              aria-pressed={torchOn}
+              aria-label={torchOn ? "關閉手電筒" : "開啟手電筒"}
+            >
+              {torchOn ? "手電筒：開" : "手電筒：關"}
+            </button>
+          ) : null}
 
           {flash ? (
             <div
