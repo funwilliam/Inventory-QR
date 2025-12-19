@@ -3,6 +3,7 @@ import react from "@vitejs/plugin-react";
 import { VitePWA } from "vite-plugin-pwa";
 
 export default defineConfig({
+  base: "/Inventory-QR/",
   plugins: [
     react(),
     VitePWA({
@@ -12,20 +13,20 @@ export default defineConfig({
         name: "Inventory QR Scanner",
         short_name: "Inventory",
         description: "Offline-first inventory scanning with QR codes.",
-        start_url: "/",
-        scope: "/",
+        start_url: "/Inventory-QR/",
+        scope: "/Inventory-QR/",
         display: "standalone",
         background_color: "#0b1220",
         theme_color: "#0b1220",
         icons: [
-          { src: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
-          { src: "/icons/icon-512.png", sizes: "512x512", type: "image/png" },
+          { src: "/Inventory-QR/icons/icon-192.png", sizes: "192x192", type: "image/png" },
+          { src: "/Inventory-QR/icons/icon-512.png", sizes: "512x512", type: "image/png" },
         ],
       },
       workbox: {
         // Cache everything needed after first load.
         // For an intranet “one-time load” scenario, this keeps the app usable offline.
-        navigateFallback: "/index.html",
+        navigateFallback: "/Inventory-QR/index.html",
         runtimeCaching: [
           {
             urlPattern: ({ url }) => url.origin === self.location.origin,

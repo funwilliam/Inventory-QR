@@ -17,6 +17,7 @@ export default function ScannerView({ rows, setRows, settings, sessionName, setS
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const handleRef = useRef<{ stop: () => void } | null>(null);
   const videoTrackRef = useRef<MediaStreamTrack | null>(null);
+  const skipCommitOnBlurRef = useRef(false);
 
   const [isRunning, setIsRunning] = useState(false);
   const [flash, setFlash] = useState<Flash | null>(null);
@@ -188,6 +189,10 @@ export default function ScannerView({ rows, setRows, settings, sessionName, setS
               onChange={(event) => setNameDraft(event.target.value)}
               onBlur={() => {
                 if (!isEditingName) return;
+                if (skipCommitOnBlurRef.current) {
+                  skipCommitOnBlurRef.current = false;
+                  return;
+                }
                 void commitSessionName();
               }}
               onKeyDown={(event) => {
@@ -197,6 +202,7 @@ export default function ScannerView({ rows, setRows, settings, sessionName, setS
                 }
                 if (event.key === "Escape") {
                   event.preventDefault();
+                  skipCommitOnBlurRef.current = true;
                   setNameDraft(sessionName);
                   setIsEditingName(false);
                   event.currentTarget.blur();

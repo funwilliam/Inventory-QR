@@ -3,7 +3,7 @@ import type { AppSettings } from "../types";
 
 type Props = {
   sessionName: string;
-  setSessionName: (s: string) => void;
+  setSessionName: (s: string) => void | Promise<void>;
   settings: AppSettings;
   setSettings: (s: AppSettings) => void;
 };
@@ -109,13 +109,12 @@ export default function SettingsView({
 
         <div>
           <div className="text-sm font-semibold">授權</div>
-          <div className="mt-1 text-xs text-slate-400 leading-relaxed">
+                    <div className="mt-1 text-xs text-slate-400 leading-relaxed">
             本專案採用{" "}
             <span className="text-slate-200">
               Production-or-Publish License v1.0
             </span>
-            （source-available，非 OSI 開源）。非生產用途可免費使用；生產用途需取得商用授權或依條款公開
-            Fork 並改以 GPL-3.0-only 授權。以專案 LICENSE 檔為準。
+            （僅 source-available，非 OSI 開源）。非生產用途可免費使用；生產用途（如修改任何代碼）需取得商用授權。以專案 LICENSE 檔為準。
           </div>
         </div>
 
