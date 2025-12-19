@@ -1,0 +1,225 @@
+Production-or-Publish License v1.0
+
+Copyright (c) 2025 Yu-Chan Chen
+All rights reserved.
+
+This is a source-available license. It is NOT an OSI-approved open source license.
+
+1. Acceptance
+
+    By copying, modifying, distributing, or using the Licensed Work, You agree to be bound by this
+    license. If You do not agree, do not use the Licensed Work.
+
+    The permissions granted under this license are expressly conditioned on Your compliance with all
+    terms and conditions herein.
+
+2. Definitions
+
+    "Licensed Work" means the software and source code contained in this repository, including any
+    files, build scripts, configuration, and documentation distributed with it.
+
+    "Licensor" means the copyright holder(s) of the Licensed Work, including the person or entity
+    identified by the copyright notice above.
+
+    "Upstream Repository" means the original public repository designated by the Licensor for the
+    Licensed Work:
+    https://github.com/funwilliam/Inventory-QR
+
+    If the Upstream Repository URL changes, the Licensor may designate a new Upstream Repository in a
+    prominent notice in the repository (e.g., README). Such designation applies prospectively.
+
+    "You" means any individual or legal entity exercising permissions granted by this license.
+
+    "Production Use" means any use by or for the benefit of a company, organization, or other legal
+    entity (including internal use) in connection with its actual business operations, including use to
+    record, track, manage, audit, or make decisions about real assets, inventory, equipment, materials,
+    customers, orders, or internal operational processes, regardless of whether the software is
+    accessed via a network/intranet/Internet or used fully offline/on-device.
+
+    "Non-Production Use" means evaluation, learning, personal use, or demonstrations that do not
+    constitute Production Use.
+
+    For avoidance of doubt, Non-Production Use includes time-limited internal evaluation or testing
+    that (i) does not record or operate on real business assets/workflows and (ii) does not produce
+    outputs used for operational business decisions.
+
+    "Fork" means any copy, modification, or derivative work of the Licensed Work.
+
+    "Deployment" includes integrating the Licensed Work or a Fork with any organization system or
+    workflow (including databases, identity systems, internal APIs, proprietary UIs, or deployment
+    pipelines), and/or modifying it for such integration.
+
+    "Corresponding Source" means the preferred form of the work for making modifications, including
+    all source code, build scripts/configuration, packaging/deployment configuration, and dependency
+    manifests necessary to produce the deployed artifact by an authorized user with lawful access to
+    any excluded third-party materials.
+
+    "Your Modifications" means any modifications, enhancements, patches, bug fixes, or derivative works
+    you create that are based on or incorporate the Licensed Work.
+
+    "First Production Use Date" means the first calendar date on which You (or anyone acting on Your
+    behalf) begins Production Use. For avoidance of doubt, it is the earliest date on which the
+    Licensed Work or a Fork is first used to record, track, or operate on real business assets or real
+    operational workflows, or the earliest date on which its outputs are first used for operational
+    business decisions.
+
+    "Ceased Production Use" means You have stopped all Production Use of the Licensed Work, any Fork,
+    and any Deployment across your organization. If You later resume Production Use at any time, You
+    must again satisfy option (A) or option (B) at that time.
+
+    "Public Repository" means a git repository that is publicly accessible for viewing and cloning
+    without requiring individualized access approval (e.g., not restricted to a closed group or by
+    case-by-case whitelisting), and that contains the complete Corresponding Source required by this
+    license.
+
+3. Non-Production Grant (free)
+
+    Subject to the terms of this license, You may copy, modify, and redistribute the Licensed Work for
+    Non-Production Use.
+
+    Production Use: Choose ONE path
+
+4. For Production Use, You must satisfy ONE of the following:
+
+    (A) Paid Commercial License
+    You have obtained a paid commercial license from the Licensor under separate written terms.
+
+    OR
+
+    (B) Publish-to-Git (no charge)
+    Within 14 days of the First Production Use Date, You must:
+
+    1) Publish the complete Corresponding Source of Your Fork (including all modifications to the
+        Licensed Work) in a Public Repository (e.g., GitHub, GitLab, or any publicly accessible git
+        hosting); and
+
+    2) License that Public Repository under GNU GPL v3.0 (GPL-3.0-only); and
+
+        If You are unable or unwilling to license Your Fork under GPL-3.0-only, You must choose
+        option (A) instead.
+
+    3) Keep the Public Repository publicly accessible for as long as You continue Production Use.
+
+        After You have Ceased Production Use, You may make the repository private or remove it.
+        If You later resume Production Use, You must again satisfy option (A) or option (B) at that
+        time.
+
+        If You resume Production Use after having Ceased Production Use, the deadlines in option (B)
+        (including the 14-day publication requirement and the notice requirement) apply again from
+        the date You resume Production Use.
+
+    4) Retain this LICENSE file and all copyright notices; and
+
+    5) Include clear, reproducible build/packaging instructions sufficient to produce the deployed
+        artifact from source (a README is acceptable); and
+
+    6) Provide NOTICE to the Licensor:
+        - Within 3 business days after publishing the Public Repository (or as soon as reasonably
+        practicable if a hosting platform outage or similar circumstance prevents timely posting),
+        You must notify the Licensor by opening an issue on the Upstream Repository with the title:
+            "Production-or-Publish License Compliance Notice: <Organization Name>"
+        The issue body must include:
+            a) the URL of the Public Repository;
+            b) the First Production Use Date;
+            c) the Organization name (legal entity) and a contact GitHub account.
+
+        If opening an issue is not possible (e.g., issues disabled), You must instead provide the
+        same notice via a contact method designated by the Licensor in the Upstream Repository
+        (e.g., email address in README). If no contact method is designated, You must publish the
+        notice in the Public Repository README under a section titled
+        "Production-or-Publish License Compliance Notice" with the same required fields.
+
+        Notice is deemed given on the date it is publicly posted (issue or README) or emailed to
+        the designated contact method, whichever is applicable.
+
+    Third-party dependencies note (option B):
+    If Your Fork depends on third-party materials that You are not legally permitted to publish
+    (e.g., proprietary SDKs, paid assets), 
+    You must:
+        i) exclude only those materials from the Public Repository; and
+        ii) clearly document how an authorized user can obtain them; and
+        iii) ensure the remaining published source is sufficient to reproduce the deployed artifact by
+        an authorized user.
+
+    This exception may not be used to withhold Your Modifications to the Licensed Work.
+
+    Contribution License-Back (required for option B):
+    By choosing option (B), You grant the Licensor a perpetual, worldwide, irrevocable,
+    non-exclusive, royalty-free license to use, reproduce, modify, create derivative works of,
+    and distribute Your Modifications, and to sublicense Your Modifications under any terms,
+    including proprietary/commercial terms.
+
+    This grant applies only to the extent You have rights in Your Modifications and does not
+    override third-party rights.
+
+    By choosing option (B), You represent that You have the right to grant the above license for
+    Your Modifications.
+
+    If You do not meet (A) or (B), You do not have permission for Production Use.
+
+5. Notices and attribution
+
+    You must not remove or alter copyright notices in the Licensed Work.
+    You may add Your own notices for Your Modifications.
+
+6. No trademark rights
+
+    This license does not grant any rights to use any trademarks, logos, or brand features of the
+    Licensor or any contributors.
+
+7. No patent rights
+
+    No patent rights are granted under this license.
+
+    For clarity: Section 6 applies to the Licensed Work as provided under this license. If You choose
+    option (B), Your Fork is licensed under GPL-3.0-only, and patent-related rights, if any, are
+    governed by GPL-3.0-only for that Fork.
+
+8. Disclaimer of warranty
+
+    THE LICENSED WORK IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+    INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+    PURPOSE, AND NONINFRINGEMENT.
+
+9. Limitation of liability
+
+    TO THE MAXIMUM EXTENT PERMITTED BY LAW, IN NO EVENT SHALL THE LICENSOR BE LIABLE FOR ANY
+    CLAIM, DAMAGES, OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT, OR OTHERWISE,
+    ARISING FROM, OUT OF, OR IN CONNECTION WITH THE LICENSED WORK OR THE USE OR OTHER DEALINGS
+    IN THE LICENSED WORK.
+
+10. Termination and reinstatement
+
+    10.1 Termination
+        Any violation of this license automatically terminates the permissions granted to You.
+
+    10.2 Reinstatement (cure)
+        If You cease the violation and come into full compliance within 30 days of the earlier of:
+            (i) Your receipt of notice of the violation from the Licensor; or
+            (ii) the date You knew or reasonably should have known of the violation,
+                the permissions granted to You are automatically reinstated.
+
+        Automatic reinstatement does not apply if this is the third (or more) violation by You within
+        any rolling 12-month period. In that case, reinstatement requires the Licensor’s explicit
+        written permission or a separate paid commercial license.
+
+    10.3 Effect of termination
+        Upon termination, You must immediately stop all Production Use unless and until You obtain
+        a paid commercial license or fully satisfy option (B) while Production Use continues.
+
+11. Governing law and venue
+
+    This license is governed by the laws of Taiwan (Republic of China), excluding conflict-of-law
+    principles. Any dispute arising from this license shall be submitted to the Taipei District Court
+    as the court of first instance, unless mandatory law provides otherwise.
+
+12. Severability
+
+    If any provision of this license is held unenforceable, the remaining provisions shall remain in
+    full force and effect.
+
+13. Entire license
+
+    This license constitutes the entire agreement regarding the Licensed Work, unless You have a
+    separate written commercial license with the Licensor.
+

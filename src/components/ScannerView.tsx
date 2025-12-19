@@ -17,7 +17,6 @@ export default function ScannerView({ rows, setRows, settings, sessionName, setS
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const handleRef = useRef<{ stop: () => void } | null>(null);
   const videoTrackRef = useRef<MediaStreamTrack | null>(null);
-  const nameInputRef = useRef<HTMLInputElement | null>(null);
 
   const [isRunning, setIsRunning] = useState(false);
   const [flash, setFlash] = useState<Flash | null>(null);
@@ -49,15 +48,6 @@ export default function ScannerView({ rows, setRows, settings, sessionName, setS
   useEffect(() => {
     if (!isEditingName) setNameDraft(sessionName);
   }, [isEditingName, sessionName]);
-
-  useEffect(() => {
-    if (!isEditingName) return;
-    const id = window.setTimeout(() => {
-      nameInputRef.current?.focus();
-      nameInputRef.current?.select();
-    }, 0);
-    return () => window.clearTimeout(id);
-  }, [isEditingName]);
 
   const total = rows.length;
 
@@ -186,43 +176,42 @@ export default function ScannerView({ rows, setRows, settings, sessionName, setS
     <div className="px-4 pb-24 pt-4">
       <div className="flex items-center justify-between gap-3">
         <div className="text-sm text-slate-300">
-          {isEditingName ? (
-            <div className="flex items-center gap-2">
-              <input
-                ref={nameInputRef}
-                value={nameDraft}
-                onChange={(event) => setNameDraft(event.target.value)}
-                onBlur={() => {
-                  void commitSessionName();
-                }}
-                onKeyDown={(event) => {
-                  if (event.key === "Enter") {
-                    event.preventDefault();
-                    event.currentTarget.blur();
-                  }
-                  if (event.key === "Escape") {
-                    event.preventDefault();
-                    setNameDraft(sessionName);
-                    setIsEditingName(false);
-                  }
-                }}
-                className="min-w-0 w-40 flex-1 rounded-lg border border-slate-700 bg-slate-900 px-2 py-1 text-sm text-white"
-                aria-label="Session name"
-              />
-              <span className="text-xs text-slate-400">{modeLabel}</span>
-            </div>
-          ) : (
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={() => setIsEditingName(true)}
-                className="font-semibold text-white truncate"
-              >
-                {sessionName}
-              </button>
-              <span className="text-xs text-slate-400">{modeLabel}</span>
-            </div>
-          )}
+          <div className="flex items-center gap-2">
+            <input
+              value={nameDraft}
+              onFocus={(event) => {
+                if (!isEditingName) {
+                  setIsEditingName(true);
+                  event.currentTarget.select();
+                }
+              }}
+              onChange={(event) => setNameDraft(event.target.value)}
+              onBlur={() => {
+                if (!isEditingName) return;
+                void commitSessionName();
+              }}
+              onKeyDown={(event) => {
+                if (event.key === "Enter") {
+                  event.preventDefault();
+                  event.currentTarget.blur();
+                }
+                if (event.key === "Escape") {
+                  event.preventDefault();
+                  setNameDraft(sessionName);
+                  setIsEditingName(false);
+                  event.currentTarget.blur();
+                }
+              }}
+              className={[
+                "min-w-0 w-40 flex-1 text-sm text-white",
+                isEditingName
+                  ? "rounded-lg border border-slate-700 bg-slate-900 px-2 py-1"
+                  : "border border-transparent bg-transparent px-0 py-0 font-semibold",
+              ].join(" ")}
+              aria-label="Session name"
+            />
+            <span className="text-xs text-slate-400">{modeLabel}</span>
+          </div>
         </div>
         <div className="text-sm">
           <span className="text-slate-400">已記錄</span> <span className="font-semibold">{total}</span>

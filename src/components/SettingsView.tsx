@@ -8,7 +8,12 @@ type Props = {
   setSettings: (s: AppSettings) => void;
 };
 
-export default function SettingsView({ sessionName, setSessionName, settings, setSettings }: Props) {
+export default function SettingsView({
+  sessionName,
+  setSessionName,
+  settings,
+  setSettings,
+}: Props) {
   const [tmpName, setTmpName] = useState(sessionName);
 
   useEffect(() => setTmpName(sessionName), [sessionName]);
@@ -39,12 +44,16 @@ export default function SettingsView({ sessionName, setSessionName, settings, se
         <label className="mt-3 flex items-center justify-between gap-3">
           <div>
             <div className="text-sm">去重模式（建議）</div>
-            <div className="text-xs text-slate-400">同一個 QR 再次掃到會提示「已掃過」，但不會新增一筆。</div>
+            <div className="text-xs text-slate-400">
+              同一個 QR 再次掃到會提示「已掃過」，但不會新增一筆。
+            </div>
           </div>
           <input
             type="checkbox"
             checked={settings.uniqueOnly}
-            onChange={(e) => setSettings({ ...settings, uniqueOnly: e.target.checked })}
+            onChange={(e) =>
+              setSettings({ ...settings, uniqueOnly: e.target.checked })
+            }
             className="h-6 w-6"
           />
         </label>
@@ -52,7 +61,9 @@ export default function SettingsView({ sessionName, setSessionName, settings, se
         <label className="mt-3 flex items-center justify-between gap-3">
           <div>
             <div className="text-sm">提示音</div>
-            <div className="text-xs text-slate-400">成功 / 重複使用不同音高。</div>
+            <div className="text-xs text-slate-400">
+              成功 / 重複使用不同音高。
+            </div>
           </div>
           <input
             type="checkbox"
@@ -64,22 +75,66 @@ export default function SettingsView({ sessionName, setSessionName, settings, se
 
         <div className="mt-4">
           <div className="text-sm">同碼冷卻（ms）</div>
-          <div className="text-xs text-slate-400">避免鏡頭停在同一張 QR 上導致重複觸發（預設 1200ms）。</div>
+          <div className="text-xs text-slate-400">
+            避免鏡頭停在同一張 QR 上導致重複觸發（預設 1200ms）。
+          </div>
           <input
             type="range"
             min={300}
             max={3000}
             step={100}
             value={settings.ignoreSameCodeCooldownMs}
-            onChange={(e) => setSettings({ ...settings, ignoreSameCodeCooldownMs: Number(e.target.value) })}
+            onChange={(e) =>
+              setSettings({
+                ...settings,
+                ignoreSameCodeCooldownMs: Number(e.target.value),
+              })
+            }
             className="mt-2 w-full"
           />
-          <div className="mt-1 text-xs font-mono text-slate-300">{settings.ignoreSameCodeCooldownMs}ms</div>
+          <div className="mt-1 text-xs font-mono text-slate-300">
+            {settings.ignoreSameCodeCooldownMs}ms
+          </div>
+        </div>
+      </div>
+
+      <div className="rounded-2xl border border-slate-800 bg-slate-900 p-4 space-y-3">
+        <div>
+          <div className="text-sm font-semibold">關於</div>
+          <div className="mt-1 text-xs text-slate-400 leading-relaxed">
+            盤點掃描工具（PWA）。掃描 QR 後立即記錄文字內容與時間，資料僅保存在本機。需要時可匯出
+            CSV，再由使用者自行分享。
+          </div>
+        </div>
+
+        <div>
+          <div className="text-sm font-semibold">授權</div>
+          <div className="mt-1 text-xs text-slate-400 leading-relaxed">
+            本專案採用{" "}
+            <span className="text-slate-200">
+              Production-or-Publish License v1.0
+            </span>
+            （source-available，非 OSI 開源）。非生產用途可免費使用；生產用途需取得商用授權或依條款公開
+            Fork 並改以 GPL-3.0-only 授權。以專案 LICENSE 檔為準。
+          </div>
+        </div>
+
+        <div>
+          <div className="text-sm font-semibold">作者</div>
+          <a
+            href="https://github.com/funwilliam"
+            target="_blank"
+            rel="noreferrer"
+            className="mt-1 inline-block text-xs text-sky-400 underline underline-offset-2"
+          >
+            github.com/funwilliam
+          </a>
         </div>
       </div>
 
       <div className="text-xs text-slate-400 leading-relaxed">
-        注意：相機掃描需要 HTTPS（安全上下文）。若你用內網臨時部署，務必用有效憑證或在 iPhone 上信任自簽憑證後再安裝 PWA。
+        注意：相機掃描需要 HTTPS（安全上下文）。若你用內網臨時部署，務必用有效憑證或在 iPhone 上信任自簽憑證後再安裝
+        PWA。
       </div>
     </div>
   );
