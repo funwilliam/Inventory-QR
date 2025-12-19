@@ -6,8 +6,9 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview --host",
-    "lint": "eslint ."
+    "build:cloudflare": "vite build --mode cloudflare_pages",
+    "build:github": "vite build --mode github_pages",
+    "preview": "vite preview"
   },
   "dependencies": {
     "@zxing/browser": "^0.1.5",

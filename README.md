@@ -37,3 +37,5 @@ Deploy the `dist/` folder to any static HTTPS host (intranet Nginx, etc.).
 
 ## License
 See `LICENSE` for terms.
+## Deployment
+- GitHub Pages: https://funwilliam.github.io/Inventory-QR
