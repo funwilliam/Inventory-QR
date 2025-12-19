@@ -43,29 +43,37 @@ export default function App() {
     await saveSettings(s);
   }
 
-  const title = tab === "scan" ? "掃描" : tab === "list" ? "清單" : tab === "export" ? "匯出" : "設定";
-  const subtitle =
-    tab === "scan"
-      ? `已記錄 ${rows.length} 筆`
-      : tab === "list"
-      ? `可搜尋 / 清空`
-      : tab === "export"
-      ? `分享或下載 CSV`
-      : `批次與掃描行為`;
+  const titleByTab: Record<TabKey, string> = {
+    scan: "掃描",
+    list: "清單",
+    export: "匯出",
+    settings: "設定",
+  };
+  const subtitleByTab: Record<TabKey, string> = {
+    scan: "讀取條碼",
+    list: "可搜尋 / 清空",
+    export: "分享或下載 CSV",
+    settings: "批次與掃描行為",
+  };
+
+  const title = titleByTab[tab];
+  const subtitle = subtitleByTab[tab];
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-50">
-      <TopBar title={title} subtitle={subtitle} right={<div className="text-xs text-slate-400">{sessionName}</div>} />
+      <div className="mx-auto w-full max-w-[440px]">
+        <TopBar title={title} subtitle={subtitle} />
 
-      {tab === "scan" ? (
-        <ScannerView rows={rows} setRows={setRows} settings={settings} sessionName={sessionName} />
-      ) : tab === "list" ? (
-        <ListView rows={rows} setRows={setRows} />
-      ) : tab === "export" ? (
-        <ExportView rows={rows} sessionName={sessionName} />
-      ) : (
-        <SettingsView sessionName={sessionName} setSessionName={setSessionName} settings={settings} setSettings={setSettings} />
-      )}
+        {tab === "scan" ? (
+          <ScannerView rows={rows} setRows={setRows} settings={settings} sessionName={sessionName} setSessionName={setSessionName} />
+        ) : tab === "list" ? (
+          <ListView rows={rows} setRows={setRows} />
+        ) : tab === "export" ? (
+          <ExportView rows={rows} sessionName={sessionName} />
+        ) : (
+          <SettingsView sessionName={sessionName} setSessionName={setSessionName} settings={settings} setSettings={setSettings} />
+        )}
+      </div>
 
       <TabBar tab={tab} setTab={setTab} />
     </div>

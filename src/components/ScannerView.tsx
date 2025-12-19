@@ -8,19 +8,23 @@ type Props = {
   setRows: React.Dispatch<React.SetStateAction<ScanRow[]>>;
   settings: AppSettings;
   sessionName: string;
+  setSessionName: (name: string) => void | Promise<void>;
 };
 
 type Flash = { kind: "ok" | "dup"; text: string; ts: number };
 
-export default function ScannerView({ rows, setRows, settings, sessionName }: Props) {
+export default function ScannerView({ rows, setRows, settings, sessionName, setSessionName }: Props) {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const handleRef = useRef<{ stop: () => void } | null>(null);
   const videoTrackRef = useRef<MediaStreamTrack | null>(null);
+  const nameInputRef = useRef<HTMLInputElement | null>(null);
 
   const [isRunning, setIsRunning] = useState(false);
   const [flash, setFlash] = useState<Flash | null>(null);
   const [torchSupported, setTorchSupported] = useState(false);
   const [torchOn, setTorchOn] = useState(false);
+  const [isEditingName, setIsEditingName] = useState(false);
+  const [nameDraft, setNameDraft] = useState(sessionName);
 
   const settingsRef = useRef<AppSettings>(settings);
   const seenRef = useRef<Set<string>>(new Set());
@@ -41,6 +45,19 @@ export default function ScannerView({ rows, setRows, settings, sessionName }: Pr
   useEffect(() => {
     seenRef.current = seen;
   }, [seen]);
+
+  useEffect(() => {
+    if (!isEditingName) setNameDraft(sessionName);
+  }, [isEditingName, sessionName]);
+
+  useEffect(() => {
+    if (!isEditingName) return;
+    const id = window.setTimeout(() => {
+      nameInputRef.current?.focus();
+      nameInputRef.current?.select();
+    }, 0);
+    return () => window.clearTimeout(id);
+  }, [isEditingName]);
 
   const total = rows.length;
 
@@ -149,14 +166,63 @@ export default function ScannerView({ rows, setRows, settings, sessionName }: Pr
     return () => window.clearTimeout(t);
   }, [flash]);
 
+  async function commitSessionName() {
+    const trimmed = nameDraft.trim();
+    if (!trimmed) {
+      const fallbackName = "未命名盤點";
+      setNameDraft(fallbackName);
+      await setSessionName(fallbackName);
+      setIsEditingName(false);
+      return;
+    }
+
+    await setSessionName(trimmed);
+    setIsEditingName(false);
+  }
+
   const modeLabel = settings.uniqueOnly ? "去重模式" : "允許重複";
 
   return (
     <div className="px-4 pb-24 pt-4">
       <div className="flex items-center justify-between gap-3">
         <div className="text-sm text-slate-300">
-          <span className="font-semibold text-white">{sessionName}</span>
-          <span className="ml-2 text-xs text-slate-400">{modeLabel}</span>
+          {isEditingName ? (
+            <div className="flex items-center gap-2">
+              <input
+                ref={nameInputRef}
+                value={nameDraft}
+                onChange={(event) => setNameDraft(event.target.value)}
+                onBlur={() => {
+                  void commitSessionName();
+                }}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter") {
+                    event.preventDefault();
+                    event.currentTarget.blur();
+                  }
+                  if (event.key === "Escape") {
+                    event.preventDefault();
+                    setNameDraft(sessionName);
+                    setIsEditingName(false);
+                  }
+                }}
+                className="min-w-0 w-40 flex-1 rounded-lg border border-slate-700 bg-slate-900 px-2 py-1 text-sm text-white"
+                aria-label="Session name"
+              />
+              <span className="text-xs text-slate-400">{modeLabel}</span>
+            </div>
+          ) : (
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setIsEditingName(true)}
+                className="font-semibold text-white truncate"
+              >
+                {sessionName}
+              </button>
+              <span className="text-xs text-slate-400">{modeLabel}</span>
+            </div>
+          )}
         </div>
         <div className="text-sm">
           <span className="text-slate-400">已記錄</span> <span className="font-semibold">{total}</span>
